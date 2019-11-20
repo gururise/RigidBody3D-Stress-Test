@@ -19,6 +19,10 @@ config/name="Rigidbody Stress Test"
 run/main_scene="res://scenes/main.tscn"
 config/icon="res://icon.png"
 
+[physics]
+
+common/physics_fps=50
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
