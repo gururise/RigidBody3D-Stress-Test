@@ -10,7 +10,9 @@ export(float) var y_dist := 2.0
 export(float) var z_dist := 2.0
 onready var cube : PackedScene = preload("res://scenes/cube.tscn")
 onready var marble : PackedScene = preload("res://scenes/marble.tscn")
-onready var fpsLabel : RichTextLabel = $CanvasLayer/FPSLabel
+onready var fpsLabel : Label = $CanvasLayer/FPSLabel
+onready var sleepLabel : Label = $CanvasLayer/SleepLabel
+onready var cubeContainer : Spatial = $CubeContainer
 var instanced_marble
 
 var title : String = "Rigidbody Stress Test"
@@ -69,7 +71,7 @@ func launchMarble():
 		marble_launched = true
 
 func deleteCubes():
-	for c in get_node("CubeContainer").get_children():
+	for c in cubeContainer.get_children():
 		c.free()
 
 func resetAll():
@@ -87,3 +89,18 @@ func resetAll():
 
 func _on_HSlider_value_changed(value):
 	$CanvasLayer/NumLabel.text = "cubes: " + str(value) + " (" + str(num_cubes) + ")"
+
+func _on_Timer_timeout():
+	var sleep_count = 0
+	for c in cubeContainer.get_children():
+		if c.sleeping == true:
+			sleep_count = sleep_count + 1
+	sleepLabel.text = "sleeping: " + str(sleep_count)
+
+func _on_CheckBox_toggled(button_pressed):
+	if (button_pressed):
+		$Timer.start()
+		sleepLabel.text = "sleeping: "
+	else:
+		$Timer.stop()
+		sleepLabel.text = "sleeping: (n/a)"

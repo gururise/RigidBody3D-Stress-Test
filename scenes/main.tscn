@@ -49,16 +49,16 @@ material/0 = SubResource( 5 )
 
 [node name="LaunchButton" type="Button" parent="CanvasLayer"]
 margin_left = 896.0
-margin_top = 70.0
+margin_top = 84.0
 margin_right = 953.0
-margin_bottom = 93.0
+margin_bottom = 107.0
 text = "Launch"
 
 [node name="ResetButton" type="Button" parent="CanvasLayer"]
 margin_left = 963.0
-margin_top = 70.0
+margin_top = 84.0
 margin_right = 1021.0
-margin_bottom = 92.0
+margin_bottom = 106.0
 text = "Reset"
 
 [node name="FPSLabel" type="Label" parent="CanvasLayer"]
@@ -75,13 +75,21 @@ margin_top = 23.0
 margin_right = 942.0
 margin_bottom = 37.0
 custom_colors/font_color = Color( 0.0117647, 0.117647, 0.6, 1 )
-text = "Cubes: "
+text = "cubes: "
+
+[node name="SleepLabel" type="Label" parent="CanvasLayer"]
+margin_left = 915.0
+margin_top = 42.0
+margin_right = 973.0
+margin_bottom = 56.0
+custom_colors/font_color = Color( 0.0117647, 0.117647, 0.6, 1 )
+text = "sleeping: (n/a)"
 
 [node name="HSlider" type="HSlider" parent="CanvasLayer"]
 margin_left = 897.0
-margin_top = 46.0
+margin_top = 60.0
 margin_right = 1021.0
-margin_bottom = 62.0
+margin_bottom = 76.0
 min_value = 100.0
 max_value = 10000.0
 step = 20.0
@@ -92,6 +100,17 @@ allow_greater = true
 allow_lesser = true
 tick_count = 4
 ticks_on_borders = true
+
+[node name="CheckBox" type="CheckBox" parent="CanvasLayer"]
+margin_left = 890.0
+margin_top = 37.0
+margin_right = 914.0
+margin_bottom = 61.0
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
 [connection signal="pressed" from="CanvasLayer/LaunchButton" to="." method="launchMarble"]
 [connection signal="pressed" from="CanvasLayer/ResetButton" to="." method="resetAll"]
 [connection signal="value_changed" from="CanvasLayer/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="toggled" from="CanvasLayer/CheckBox" to="." method="_on_CheckBox_toggled"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
