@@ -46,7 +46,7 @@ func _process(delta):
 	if timer > TIMER_LIMIT:
 		timer = 0.0
 		#OS.set_window_title(title + " | fps: " + str(Engine.get_frames_per_second()))
-		fpsLabel.text = "fps: " + str(Engine.get_frames_per_second())
+		fpsLabel.text = "fps: " + str(Performance.get_monitor(Performance.TIME_FPS))
 
 func spawnCubes():
 	for i in range(num_cubes):
@@ -91,6 +91,8 @@ func _on_HSlider_value_changed(value):
 	$CanvasLayer/NumLabel.text = "cubes: " + str(value) + " (" + str(num_cubes) + ")"
 
 func _on_Timer_timeout():
+	# Performance monitor does not work for Bullet Physics (we use a workaround) - https://github.com/godotengine/godot/issues/16540
+	#sleepLabel.text = "sleeping: " + str(num_cubes - Performance.get_monitor(Performance.PHYSICS_3D_ACTIVE_OBJECTS) + 1)
 	var sleep_count = 0
 	for c in cubeContainer.get_children():
 		if c.sleeping == true:
