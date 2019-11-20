@@ -10,14 +10,15 @@ This is a Rigidbody3D stress test for Godot 3.1+ designed to test the performanc
   - GUI controls for reset and launch
   - Additional options available in exported Editor variables
   - Compatible with Godot 3.1.1 or newer
-  - Physics update rate set to 50Hz to match default Unity fixed timestep of 0.02
+  - Physics update rate set to 50 fps to match default Unity fixed timestep of 0.02
+  - VSYNC disabled to match the Unity test referenced above.
 
 ### Performance
 
-On my Core i7-3770 (3.4 Ghz), going much above 1,000 rigid bodies using the default settings results in significant frame drops. Here are a couple of ideas for improving performance through adjustments to the Project Settings:
+On my Core i7-3770 (3.4 Ghz), going much above 1,100 rigid bodies using the default settings results in significant frame drops. Here are a couple of ideas for improving performance through adjustments to the Project Settings:
 
 * Use the Bullet Physics Engine (default).  The Godot Physics Engine is significantly slower.
-* Drop Physics Framerate from the default 60 FPS.
+* Drop Physics Framerate from the default 60 fps.
 * Export as executable without Debug symbols.
 * Disable shadows and/or directional lighting.
 * You can play around with rendering quality/lighting and try GLES2.  I haven't noticed much difference.
