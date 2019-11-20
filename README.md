@@ -12,6 +12,7 @@ This is a Rigidbody3D stress test for Godot 3.1+ designed to test the performanc
   - Compatible with Godot 3.1.1 or newer
   - Physics update rate set to 50 fps to match default Unity fixed timestep of 0.02
   - VSYNC disabled to match the Unity test referenced above.
+  - Report number of sleeping Rigidbodies.
 
 ### Performance
 
