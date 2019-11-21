@@ -8,14 +8,15 @@ export(int,12,60) var size := 20
 export(float) var x_dist := 2.0
 export(float) var y_dist := 2.0
 export(float) var z_dist := 2.0
-onready var cube : PackedScene = preload("res://scenes/cube.tscn")
+#onready var cube : PackedScene = preload("res://scenes/cube.tscn")
+onready var cube_mm : PackedScene = preload("res://scenes/cube_mm.tscn")
 onready var marble : PackedScene = preload("res://scenes/marble.tscn")
 onready var fpsLabel : Label = $CanvasLayer/FPSLabel
 onready var sleepLabel : Label = $CanvasLayer/SleepLabel
 onready var cubeContainer : Spatial = $CubeContainer
+onready var mm : MultiMesh = $MultiMeshInstance.get_multimesh()
 var instanced_marble
 
-var title : String = "Rigidbody Stress Test"
 var timer : float = 0.0
 var marble_launched : bool = false
 var camera_anglev : int = -15
@@ -24,11 +25,13 @@ const mouse_sens : float  = 0.2
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	spawnCubes()
 	instanced_marble = marble.instance()
 	add_child(instanced_marble)
 	$CanvasLayer/HSlider.value = num_cubes
 	$CanvasLayer/NumLabel.text = "cubes: " + str(num_cubes) + " (" + str(num_cubes) + ")"
+	# setup multimesh instances
+	mm.set_instance_count(num_cubes)
+	spawnCubes()
 
 func _input(event):         
 	if event is InputEventMouseMotion && Input.is_mouse_button_pressed(BUTTON_LEFT):
@@ -48,9 +51,14 @@ func _process(delta):
 		#OS.set_window_title(title + " | fps: " + str(Engine.get_frames_per_second()))
 		fpsLabel.text = "fps: " + str(Performance.get_monitor(Performance.TIME_FPS))
 
-func spawnCubes():
+func _physics_process(delta):
+	# update per-instance multimesh transforms on each physics frame
 	for i in range(num_cubes):
-		var instanced_cube = cube.instance()
+		mm.set_instance_transform(i,cubeContainer.get_child(i).transform)
+
+func spawnCubes():
+	for i in range(mm.instance_count):
+		var instanced_cube = cube_mm.instance()
 		var modval = i%size
 # warning-ignore:integer_division
 		if (modval < size/4):
@@ -64,6 +72,7 @@ func spawnCubes():
 		else:
 			instanced_cube.translate(Vector3((modval-size/4*3)*x_dist,i/size*y_dist,40+z_dist+size/4*z_dist))
 		get_node("CubeContainer").add_child(instanced_cube)
+		mm.set_instance_transform(i,instanced_cube.transform)
 
 func launchMarble():
 	if not marble_launched:
@@ -77,10 +86,12 @@ func deleteCubes():
 func resetAll():
 	# delete marble
 	instanced_marble.free()
+	
 	# delete cubes
 	deleteCubes()
 	num_cubes = int($CanvasLayer/HSlider.value)
 	_on_HSlider_value_changed(num_cubes)
+	mm.set_instance_count(num_cubes)
 	# reinstance marble
 	instanced_marble = marble.instance()
 	marble_launched = false
@@ -95,7 +106,7 @@ func _on_Timer_timeout():
 	#sleepLabel.text = "sleeping: " + str(num_cubes - Performance.get_monitor(Performance.PHYSICS_3D_ACTIVE_OBJECTS) + 1)
 	var sleep_count = 0
 	for c in cubeContainer.get_children():
-		if c.sleeping == true:
+		if c.sleeping:
 			sleep_count = sleep_count + 1
 	sleepLabel.text = "sleeping: " + str(sleep_count)
 

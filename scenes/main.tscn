@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scenes/main.gd" type="Script" id=1]
 
@@ -9,13 +9,23 @@ background_mode = 2
 background_sky = SubResource( 1 )
 background_sky_custom_fov = 72.4
 
-[sub_resource type="BoxShape" id=3]
+[sub_resource type="SpatialMaterial" id=3]
+albedo_color = Color( 0.784314, 0.341176, 0.341176, 1 )
+
+[sub_resource type="CubeMesh" id=4]
+material = SubResource( 3 )
+
+[sub_resource type="MultiMesh" id=5]
+transform_format = 1
+mesh = SubResource( 4 )
+
+[sub_resource type="BoxShape" id=6]
 extents = Vector3( 100, 0.1, 200 )
 
-[sub_resource type="PlaneMesh" id=4]
+[sub_resource type="PlaneMesh" id=7]
 size = Vector2( 200, 400 )
 
-[sub_resource type="SpatialMaterial" id=5]
+[sub_resource type="SpatialMaterial" id=8]
 albedo_color = Color( 0.686275, 0.686275, 0.686275, 1 )
 
 [node name="Spatial" type="Spatial"]
@@ -33,19 +43,24 @@ far = 150.0
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 2 )
 
+[node name="MultiMeshInstance" type="MultiMeshInstance" parent="."]
+multimesh = SubResource( 5 )
+
 [node name="Floor" type="StaticBody" parent="."]
 editor/display_folded = true
 
 [node name="CollisionShape" type="CollisionShape" parent="Floor"]
-shape = SubResource( 3 )
+shape = SubResource( 6 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Floor"]
-mesh = SubResource( 4 )
-material/0 = SubResource( 5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.106584, -9.53674e-07, -0.000896454 )
+mesh = SubResource( 7 )
+material/0 = SubResource( 8 )
 
 [node name="CubeContainer" type="Spatial" parent="."]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+editor/display_folded = true
 
 [node name="LaunchButton" type="Button" parent="CanvasLayer"]
 margin_left = 896.0
