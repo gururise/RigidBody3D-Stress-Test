@@ -6,18 +6,20 @@ This is a Rigidbody3D stress test for Godot 3.1+ designed to test the performanc
 
 # Features
 
+  - Use MultimeshInstance to optimize rendering of box meshes
   - Configurable number of Rigidbodies
   - GUI controls for reset and launch
   - Additional options available in exported Editor variables
   - Compatible with Godot 3.1.1 or newer
   - Physics update rate set to 50 fps to match default Unity fixed timestep of 0.02
   - VSYNC disabled to match the Unity test referenced above.
-  - Report number of sleeping Rigidbodies.
+  - Report number of sleeping Rigidbodies (enable sleeping checkbox to view sleeping bodies).
 
 ### Performance
 
-On my Core i7-3770 (3.4 Ghz), going much above 1,100 rigid bodies using the default settings results in significant frame drops. Here are a couple of ideas for improving performance through adjustments to the Project Settings:
+Since switching to MultiMeshes, performance has increased significantly. On my Core i7-3770 (3.4 Ghz), I am able to easily simulate well above 1500 cubes. Here are a couple of ideas for improving performance through adjustments to the Project Settings:
 
+* Because multimesh requires code to update the per-instance mesh transforms on every physics frame, there is an opportunity for further optimization via a separate thread or switching to c#/c++ or both.
 * Use the Bullet Physics Engine (default).  The Godot Physics Engine is significantly slower.
 * Drop Physics Framerate from the default 60 fps.
 * Export as executable without Debug symbols.
@@ -26,6 +28,8 @@ On my Core i7-3770 (3.4 Ghz), going much above 1,100 rigid bodies using the defa
 
 ### Todos
 
+ - Separate thread to update per-instance mesh transforms on each physics frame. (Performance)
+ - Convert code to update mesh transforms to C#. (Performance)
  - Bring more settings out to the GUI
  - Record Min FPS and Avg FPS
 
