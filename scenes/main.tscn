@@ -60,7 +60,6 @@ material/0 = SubResource( 8 )
 [node name="CubeContainer" type="Spatial" parent="."]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-editor/display_folded = true
 
 [node name="LaunchButton" type="Button" parent="CanvasLayer"]
 margin_left = 896.0
@@ -77,10 +76,10 @@ margin_bottom = 106.0
 text = "Reset"
 
 [node name="FPSLabel" type="Label" parent="CanvasLayer"]
-margin_left = 943.0
-margin_top = 3.0
-margin_right = 1023.0
-margin_bottom = 17.0
+margin_left = 698.0
+margin_top = 2.0
+margin_right = 778.0
+margin_bottom = 16.0
 custom_colors/font_color = Color( 1, 0, 0, 1 )
 text = "FPS:"
 

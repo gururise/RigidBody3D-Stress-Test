@@ -23,6 +23,13 @@ var camera_anglev : int = -15
 export(float,0.01,1.0) var TIMER_LIMIT := 0.1	# fps gui refresh rate in seconds
 const mouse_sens : float  = 0.2
 
+onready var fps : int = int(Performance.get_monitor(Performance.TIME_FPS))
+onready var fps_min : int = 9999
+onready var fps_max : int = 0
+onready var fps_sum : int = 0
+onready var fps_average : float = 0.0
+onready var frames : int = -20  # need to wait a bit before starting to track the fps
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	instanced_marble = marble.instance()
@@ -47,9 +54,18 @@ func _input(event):
 func _process(delta):
 	timer += delta
 	if timer > TIMER_LIMIT:
+		frames += 1
 		timer = 0.0
 		#OS.set_window_title(title + " | fps: " + str(Engine.get_frames_per_second()))
-		fpsLabel.text = "fps: " + str(Performance.get_monitor(Performance.TIME_FPS))
+		fps = int(Performance.get_monitor(Performance.TIME_FPS))
+		if frames > 0:
+			if fps < fps_min:
+				fps_min = fps
+			if fps > fps_max:
+				fps_max = fps
+			fps_sum += fps
+			fps_average = fps_sum / frames
+			fpsLabel.text = "fps: " + str(fps) + " // " + "min: " + str(fps_min) + " // " + "max: " + str(fps_max) + " // " + "avg: " + str(fps_average)
 
 func _physics_process(delta):
 	# update per-instance multimesh transforms on each physics frame
@@ -74,6 +90,14 @@ func spawnCubes():
 		get_node("CubeContainer").add_child(instanced_cube)
 		mm.set_instance_transform(i,instanced_cube.transform)
 
+func resetFPS():
+	fpsLabel.text = "fps: "
+	fps_min = 9999
+	fps_max = 0
+	fps_sum = 0
+	fps_average = 0.0
+	frames = -20
+
 func launchMarble():
 	if not marble_launched:
 		instanced_marble.add_central_force(Vector3(-2000,0,-19000))
@@ -84,6 +108,7 @@ func deleteCubes():
 		c.free()
 
 func resetAll():
+	resetFPS()
 	# delete marble
 	instanced_marble.free()
 	
@@ -97,6 +122,7 @@ func resetAll():
 	marble_launched = false
 	add_child(instanced_marble)
 	spawnCubes()
+
 
 func _on_HSlider_value_changed(value):
 	$CanvasLayer/NumLabel.text = "cubes: " + str(value) + " (" + str(num_cubes) + ")"
