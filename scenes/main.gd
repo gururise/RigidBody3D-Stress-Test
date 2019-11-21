@@ -19,7 +19,7 @@ var title : String = "Rigidbody Stress Test"
 var timer : float = 0.0
 var marble_launched : bool = false
 var camera_anglev : int = -15
-export(float) var TIMER_LIMIT := 0.25	# fps gui refresh rate in seconds
+export(float,0.01,1.0) var TIMER_LIMIT := 0.1	# fps gui refresh rate in seconds
 const mouse_sens : float  = 0.2
 
 # Called when the node enters the scene tree for the first time.
