@@ -30,7 +30,7 @@ func _ready() -> void:
 	mm.set_instance_count(num_cubes)
 	spawnCubes()
 
-func _input(event) -> void:         
+func _input(event : InputEvent) -> void:         
 	if event is InputEventMouseMotion && Input.is_mouse_button_pressed(BUTTON_LEFT):
 		$Camera.rotate_y(deg2rad(-event.relative.x*mouse_sens))
 		var changev=-event.relative.y*mouse_sens
@@ -96,7 +96,7 @@ func _on_Timer_timeout():
 			sleep_count += 1
 	sleepLabel.text = "sleeping: " + str(sleep_count)
 
-func _on_CheckBox_toggled(button_pressed):
+func _on_CheckBox_toggled(button_pressed : bool) -> void:
 	if (button_pressed):
 		$Timer.start()
 		sleepLabel.text = "sleeping: "
