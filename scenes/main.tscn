@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://scenes/main.gd" type="Script" id=1]
+[ext_resource path="res://scripts/main.gd" type="Script" id=1]
+[ext_resource path="res://scripts/transCopy.cs" type="Script" id=2]
 
 [sub_resource type="ProceduralSky" id=1]
 
@@ -58,6 +59,7 @@ mesh = SubResource( 7 )
 material/0 = SubResource( 8 )
 
 [node name="CubeContainer" type="Spatial" parent="."]
+script = ExtResource( 2 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -113,7 +115,6 @@ rounded = true
 allow_greater = true
 allow_lesser = true
 tick_count = 4
-ticks_on_borders = true
 
 [node name="CheckBox" type="CheckBox" parent="CanvasLayer"]
 margin_left = 890.0
