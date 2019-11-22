@@ -2,10 +2,11 @@
 
 ![](demo.gif)
 
-This is a Rigidbody3D stress test for Godot 3.1+ designed to test the performance of the 3D Physics Engine in Godot.  It was inspired by a similar [stress test](https://www.youtube.com/watch?v=8zo5a_QvJtk) done in Unity.  In that test, Unity was able to simulate 1,500 rigid bodies and still maintain over 100 fps on a Dual Xeon E5-2v650 v2 (2.60 Ghz)
+This is a Rigidbody3D stress test for Godot 3.1+ designed to test the performance of the 3D Physics Engine in Godot.  It was inspired by a similar [stress test](https://www.youtube.com/watch?v=8zo5a_QvJtk) done in Unity.  In that test, Unity was able to simulate 1,500 rigid bodies and still maintain over 100 fps on a Dual Xeon E5-2v650 v2 (2.60 Ghz).  This is the csharp branch, where performance critical code was written in c# vs gdscript in an attempt to boost performance.
 
 # Features
 
+  - Performance critical code re-written in c#
   - Use MultimeshInstance to optimize rendering of box meshes
   - Configurable number of Rigidbodies
   - GUI controls for reset and launch
@@ -29,9 +30,9 @@ Since switching to MultiMeshes, performance has increased significantly. On my C
 ### Todos
 
  - Separate thread to update per-instance mesh transforms on each physics frame. (Performance)
- - Convert code to update mesh transforms to C#. (Performance)
+ - ~~Convert code to update mesh transforms to C#. (Performance)~~
  - Bring more settings out to the GUI
- - Record Min FPS and Avg FPS
+ - ~~Record Min FPS and Avg FPS~~
 
 License
 ----
