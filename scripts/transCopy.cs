@@ -30,9 +30,10 @@ public sealed class transCopy : Spatial
 		{
 			frames++;
 			timer = 0.0f;
-			fps = (int)Performance.GetMonitor(Performance.Monitor.TimeFps);
+
 			if (frames > 0) 
 			{
+				fps = (int)Performance.GetMonitor(Performance.Monitor.TimeFps);
 				if (fps < fps_min) 
 					fps_min = fps;
 				if (fps > fps_max) 
