@@ -57,8 +57,8 @@ func _process(delta):
 		frames += 1
 		timer = 0.0
 		#OS.set_window_title(title + " | fps: " + str(Engine.get_frames_per_second()))
-		fps = int(Performance.get_monitor(Performance.TIME_FPS))
 		if frames > 0:
+			fps = int(Performance.get_monitor(Performance.TIME_FPS))
 			if fps < fps_min:
 				fps_min = fps
 			if fps > fps_max:
