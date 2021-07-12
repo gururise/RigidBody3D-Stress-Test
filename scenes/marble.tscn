@@ -13,7 +13,7 @@ radius = 2.5
 height = 5.0
 
 [node name="Marble" type="RigidBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 2.7, 90 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 25 )
 mass = 7.8
 
 [node name="CollisionShape" type="CollisionShape" parent="."]

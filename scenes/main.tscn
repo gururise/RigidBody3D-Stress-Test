@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scenes/main.gd" type="Script" id=1]
+[ext_resource path="res://scenes/CameraGimbal.gd" type="Script" id=2]
 
 [sub_resource type="ProceduralSky" id=1]
 
@@ -10,7 +11,7 @@ background_sky = SubResource( 1 )
 background_sky_custom_fov = 72.4
 
 [sub_resource type="SpatialMaterial" id=3]
-albedo_color = Color( 0.784314, 0.341176, 0.341176, 1 )
+albedo_color = Color( 1, 0, 0.00784314, 1 )
 
 [sub_resource type="CubeMesh" id=4]
 material = SubResource( 3 )
@@ -30,15 +31,13 @@ albedo_color = Color( 0.686275, 0.686275, 0.686275, 1 )
 
 [node name="Spatial" type="Spatial"]
 script = ExtResource( 1 )
+num_cubes = 600
+side_length = 5
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 0.783125, 0.326696, -0.529136, -0.140253, 0.921752, 0.361527, 0.605842, -0.208908, 0.767667, -15.9405, 16.3017, 27.6911 )
 light_energy = 0.75
 shadow_enabled = true
-
-[node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.929609, 0.368548, 0, -0.368548, 0.929609, 15.7354, 37.2483, 95.5262 )
-far = 150.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 2 )
@@ -47,7 +46,6 @@ environment = SubResource( 2 )
 multimesh = SubResource( 5 )
 
 [node name="Floor" type="StaticBody" parent="."]
-editor/display_folded = true
 
 [node name="CollisionShape" type="CollisionShape" parent="Floor"]
 shape = SubResource( 6 )
@@ -104,9 +102,9 @@ margin_left = 897.0
 margin_top = 60.0
 margin_right = 1021.0
 margin_bottom = 76.0
-min_value = 100.0
+min_value = 25.0
 max_value = 10000.0
-step = 20.0
+step = 25.0
 page = 100.0
 value = 500.0
 rounded = true
@@ -114,6 +112,9 @@ allow_greater = true
 allow_lesser = true
 tick_count = 4
 ticks_on_borders = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CheckBox" type="CheckBox" parent="CanvasLayer"]
 margin_left = 890.0
@@ -123,6 +124,16 @@ margin_bottom = 61.0
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 5.0
+
+[node name="CameraGimbal" type="Spatial" parent="."]
+script = ExtResource( 2 )
+
+[node name="InnerGimbal" type="Spatial" parent="CameraGimbal"]
+
+[node name="Camera" type="Camera" parent="CameraGimbal/InnerGimbal"]
+transform = Transform( 1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 20, 40 )
+far = 150.0
+
 [connection signal="pressed" from="CanvasLayer/LaunchButton" to="." method="launchMarble"]
 [connection signal="pressed" from="CanvasLayer/ResetButton" to="." method="resetAll"]
 [connection signal="value_changed" from="CanvasLayer/HSlider" to="." method="_on_HSlider_value_changed"]
