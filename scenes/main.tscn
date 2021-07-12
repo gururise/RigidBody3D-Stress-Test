@@ -31,8 +31,6 @@ albedo_color = Color( 0.686275, 0.686275, 0.686275, 1 )
 
 [node name="Spatial" type="Spatial"]
 script = ExtResource( 1 )
-num_cubes = 600
-side_length = 5
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 0.783125, 0.326696, -0.529136, -0.140253, 0.921752, 0.361527, 0.605842, -0.208908, 0.767667, -15.9405, 16.3017, 27.6911 )

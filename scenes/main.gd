@@ -4,8 +4,8 @@ extends Spatial
 # var a = 2
 # var b = "text"
 export(int,25,75000) var num_cubes : int = 500
-export(int,1,100) var side_length : int = 15
-export(int,1,400) var impulse : int = 75
+export(int,1,100) var side_length : int = 5
+export(int,1,1000) var impulse : int = 250
 
 #onready var cube : PackedScene = preload("res://scenes/cube.tscn")
 onready var cube_mm : PackedScene = preload("res://scenes/cube_mm.tscn")
