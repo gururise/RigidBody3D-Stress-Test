@@ -1,14 +1,14 @@
-extends Spatial
+extends Node3D
 
 var rotation_speed : float = PI/2
 var invert_y : bool = false
 var invert_x : bool  = false
-export var mouse_control : bool = false
+@export var mouse_control : bool = false
 var mouse_sensitivity : float = 0.005
 
-export var max_zoom : float = 3.0
-export var min_zoom : float = 0.5
-export var zoom_speed : float = 0.09
+@export var max_zoom : float = 3.0
+@export var min_zoom : float = 0.5
+@export var zoom_speed : float = 0.09
 
 var zoom : float = 1.5
 
@@ -47,4 +47,4 @@ func _process(_delta):
 	if !mouse_control:
 		get_input_keyboard(_delta)
 	$InnerGimbal.rotation.x = clamp($InnerGimbal.rotation.x, -1.4, 0.45)
-	scale = lerp(scale, Vector3.ONE * zoom, zoom_speed)
+	scale = scale.lerp(Vector3.ONE * zoom, zoom_speed)

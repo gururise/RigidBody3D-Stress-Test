@@ -1,28 +1,25 @@
-extends Spatial
+extends Node3D
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-export(int,25,75000) var num_cubes : int = 500
-export(int,1,100) var side_length : int = 5
-export(int,1,1000) var impulse : int = 250
+@export_range(25,75000) var num_cubes : int = 500
+@export_range(1,100) var side_length : int = 5
+@export_range(1,1000) var impulse : int = 75
 
 #onready var cube : PackedScene = preload("res://scenes/cube.tscn")
-onready var cube_mm : PackedScene = preload("res://scenes/cube_mm.tscn")
-onready var marble : PackedScene = preload("res://scenes/marble.tscn")
-onready var fpsLabel : Label = $CanvasLayer/FPSLabel
-onready var sleepLabel : Label = $CanvasLayer/SleepLabel
-onready var cubeContainer : Spatial = $CubeContainer
-onready var mm : MultiMesh = $MultiMeshInstance.get_multimesh()
+@onready var cube_mm : PackedScene = preload("res://scenes/cube_mm.tscn")
+@onready var marble : PackedScene = preload("res://scenes/marble.tscn")
+@onready var fpsLabel : Label = $CanvasLayer/FPSLabel
+@onready var sleepLabel : Label = $CanvasLayer/SleepLabel
+@onready var cubeContainer : Node3D = $CubeContainer
+@onready var mm : MultiMesh = $MultiMeshInstance.get_multimesh()
 var instanced_marble
 
 var timer : float = 0.0
 var marble_launched : bool = false
 var camera_anglev : int = -15
-export(float,0.01,1.0) var TIMER_LIMIT := 0.1	# fps gui refresh rate in seconds
+@export_range(0.01,1.0) var TIMER_LIMIT : float = 0.1	# fps gui refresh rate in seconds
 const mouse_sens : float  = 0.2
 
-onready var fps : int = int(Performance.get_monitor(Performance.TIME_FPS))
+@onready var fps : int = int(Performance.get_monitor(Performance.TIME_FPS))
 var fps_min : int = 9999
 var fps_max : int = 0
 var fps_sum : int = 0
@@ -31,7 +28,7 @@ var frames : int = -20  # need to wait a bit before starting to track the fps
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	instanced_marble = marble.instance()
+	instanced_marble = marble.instantiate()
 	add_child(instanced_marble)
 	$CanvasLayer/HSlider.value = num_cubes
 	$CanvasLayer/NumLabel.text = "cubes: " + str(num_cubes) + " (" + str(num_cubes) + ")"
@@ -67,7 +64,7 @@ func _physics_process(_delta) -> void:
 		mm.set_instance_transform(i,cubeContainer.get_child(i).transform)
 
 func spawn_cubes() -> void:
-	PhysicsServer.set_active(false)
+	PhysicsServer3D.set_active(false)
 	
 	var a = -side_length / 2.0
 	var b = 0
@@ -75,7 +72,7 @@ func spawn_cubes() -> void:
 	var d = 0
 	
 	for i in range(mm.instance_count):
-		var instanced_cube = cube_mm.instance()
+		var instanced_cube = cube_mm.instantiate()
 # warning-ignore:integer_division
 		var level = i / (side_length * 4)
 		
@@ -111,7 +108,7 @@ func resetFPS() -> void:
 
 func launchMarble() -> void:
 	if not marble_launched:
-		PhysicsServer.set_active(true)
+		PhysicsServer3D.set_active(true)
 		#instanced_marble.translate(Vector3(-side_length/2,0,0))
 		instanced_marble.apply_central_impulse(Vector3(0,0,-impulse))
 		marble_launched = true
@@ -133,7 +130,7 @@ func resetAll() -> void:
 	_on_HSlider_value_changed(num_cubes)
 	mm.set_instance_count(num_cubes)
 	# reinstance marble
-	instanced_marble = marble.instance()
+	instanced_marble = marble.instantiate()
 	marble_launched = false
 	add_child(instanced_marble)
 	spawn_cubes()
