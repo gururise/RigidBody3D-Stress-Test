@@ -46,5 +46,5 @@ func get_input_keyboard(delta) -> void:
 func _process(_delta):    
 	if !mouse_control:
 		get_input_keyboard(_delta)
-	$InnerGimbal.rotation.x = clamp($InnerGimbal.rotation.x, -1.4, -0.01)
+	$InnerGimbal.rotation.x = clamp($InnerGimbal.rotation.x, -1.4, 0.45)
 	scale = lerp(scale, Vector3.ONE * zoom, zoom_speed)

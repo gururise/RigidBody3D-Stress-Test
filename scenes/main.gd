@@ -23,11 +23,11 @@ export(float,0.01,1.0) var TIMER_LIMIT := 0.1	# fps gui refresh rate in seconds
 const mouse_sens : float  = 0.2
 
 onready var fps : int = int(Performance.get_monitor(Performance.TIME_FPS))
-onready var fps_min : int = 9999
-onready var fps_max : int = 0
-onready var fps_sum : int = 0
-onready var fps_average : float = 0.0
-onready var frames : int = -20  # need to wait a bit before starting to track the fps
+var fps_min : int = 9999
+var fps_max : int = 0
+var fps_sum : int = 0
+var fps_average : float = 0.0
+var frames : int = -20  # need to wait a bit before starting to track the fps
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
