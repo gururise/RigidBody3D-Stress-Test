@@ -4,6 +4,9 @@
 
 This is a Rigidbody3D stress test for ~~Godot 3.1~~+ (Updated for Godot 3.3+) designed to test the performance of the 3D Physics Engine in Godot.  It was inspired by a similar [stress test](https://www.youtube.com/watch?v=8zo5a_QvJtk) done in Unity.  In that test, Unity was able to simulate 1,500 rigid bodies and still maintain over 100 fps on a Dual Xeon E5-2v650 v2 (2.60 Ghz)
 
+# Video
+A video using this code can be found on [YouTube](https://www.youtube.com/watch?v=XTE4B6yULR4).
+
 # Features
 
   - Use MultimeshInstance to optimize rendering of box meshes
