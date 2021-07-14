@@ -1,6 +1,6 @@
 extends Spatial
 
-var rotation_speed : float = PI/2
+export var rotation_speed : float = PI/2
 var invert_y : bool = false
 var invert_x : bool  = false
 export var mouse_control : bool = false

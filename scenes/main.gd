@@ -60,7 +60,7 @@ func _process(delta) -> void:
 # warning-ignore:integer_division
 			fps_average = fps_sum / frames
 			fpsLabel.text = "fps: " + str(fps) + " // " + "min: " + str(fps_min) + " // " + "max: " + str(fps_max) + " // " + "avg: " + str(fps_average)
-
+	
 func _physics_process(_delta) -> void:
 	# update per-instance multimesh transforms on each physics frame
 	for i in range(mm.instance_count):
@@ -86,8 +86,9 @@ func spawn_cubes() -> void:
 			c = a
 			d = 0
 		
+		# y height should be (level - 0.5), but set to (level + 0.5) to let the bricks fall and collapse better
 		if i%4 == 0:
-			instanced_cube.translate(Vector3(a+1,level+0.5,0))			
+			instanced_cube.translate(Vector3(a+1,level + 0.5,0))			
 			a+=1
 		elif i%4 == 1:
 			instanced_cube.translate(Vector3(-side_length / 2.0 + side_length + 1.0, level + 0.5, b + 1.0))
