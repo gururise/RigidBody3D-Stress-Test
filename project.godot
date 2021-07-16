@@ -14,6 +14,10 @@ config/name="Rigidbody Stress Test"
 run/main_scene="res://scenes/main.tscn"
 config/icon="res://icon.png"
 
+[display]
+
+window/vsync/use_vsync=false
+
 [input]
 
 cam_zoom_in={
@@ -50,6 +54,7 @@ cam_left={
 [physics]
 
 common/physics_fps=50
+3d/physics_engine="Bullet"
 
 [rendering]
 
