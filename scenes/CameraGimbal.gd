@@ -33,9 +33,9 @@ func get_input_keyboard(delta) -> void:
 	# Rotate outer gimbal around y axis
 	var y_rotation = 0
 	if Input.is_action_pressed("cam_right"):
-		y_rotation += -1
-	if Input.is_action_pressed("cam_left"):
 		y_rotation += 1
+	if Input.is_action_pressed("cam_left"):
+		y_rotation += -1
 	rotate_object_local(Vector3.UP, y_rotation * rotation_speed * delta)
 	# Rotate inner gimbal around local x axis
 	var x_rotation = 0
