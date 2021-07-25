@@ -4,16 +4,19 @@ export(int,25,75000) var num_cubes : int = 500
 export(int,1,100) var side_length : int = 5
 export(int,1,1000) var impulse : int = 250
 
+onready var cube_mm : PackedScene = preload("res://scenes/cube_mm.tscn")
 onready var marble : PackedScene = preload("res://scenes/marble.tscn")
-onready var fpsLabel : Label = $CanvasLayer/FPSLabel
-onready var sleepLabel : Label = $CanvasLayer/SleepLabel
+onready var fpsLabel : Label = $CanvasLayer/ReferenceRect/FPSLabel
+onready var sleepLabel : Label = $CanvasLayer/ReferenceRect/SleepLabel
+onready var cubeContainer : Spatial = $CubeContainer
 onready var mm : MultiMesh = $MultiMeshInstance.get_multimesh()
 var instanced_marble
-var cube_array = []
 
 var timer : float = 0.0
 var marble_launched : bool = false
+var camera_anglev : int = -15
 export(float,0.01,1.0) var TIMER_LIMIT := 0.1	# fps gui refresh rate in seconds
+const mouse_sens : float  = 0.2
 
 onready var fps : int = int(Performance.get_monitor(Performance.TIME_FPS))
 var fps_min : int = 9999
@@ -26,8 +29,8 @@ var frames : int = -20  # need to wait a bit before starting to track the fps
 func _ready() -> void:
 	instanced_marble = marble.instance()
 	add_child(instanced_marble)
-	$CanvasLayer/HSlider.value = num_cubes
-	$CanvasLayer/NumLabel.text = "cubes: " + str(num_cubes) + " (" + str(num_cubes) + ")"
+	$CanvasLayer/ReferenceRect/HSlider.value = num_cubes
+	$CanvasLayer/ReferenceRect/NumLabel.text = "cubes: " + str(num_cubes) + " (" + str(num_cubes) + ")"
 	# setup multimesh instances
 	mm.set_instance_count(num_cubes)
 	spawn_cubes()
@@ -49,80 +52,52 @@ func _process(delta) -> void:
 				fps_min = fps
 			if fps > fps_max:
 				fps_max = fps
-			# calc fps avg of last 1 second in 1 second intervals (we only do a division once every second)
-			if frames <= 10:
-				fps_sum += fps
-			else:
-				# warning-ignore:integer_division
-				fps_average = fps_sum / frames
-				frames = 0
-				fps_sum = fps
-				
-			#fps_average = fps_sum / frames
+			fps_sum += fps
+# warning-ignore:integer_division
+			fps_average = fps_sum / frames
 			fpsLabel.text = "fps: " + str(fps) + " // " + "min: " + str(fps_min) + " // " + "max: " + str(fps_max) + " // " + "avg: " + str(fps_average)
 	
 func _physics_process(_delta) -> void:
 	# update per-instance multimesh transforms on each physics frame
-	for cube in cube_array:
-		mm.set_instance_transform(cube.mmidx,PhysicsServer.body_get_state(cube.rid,PhysicsServer.BODY_STATE_TRANSFORM))
+	for i in range(mm.instance_count):
+		mm.set_instance_transform(i,cubeContainer.get_child(i).transform)
 
 func spawn_cubes() -> void:
 	PhysicsServer.set_active(false)
-	cube_array.clear()
-	
-	for i in range(num_cubes):
-		cube_array.append(InnerCube.new())
 	
 	var a = -side_length / 2.0
 	var b = 0
 	var c = a
 	var d = 0
-	var cnt = 0
-	var box = PhysicsServer.shape_create(PhysicsServer.SHAPE_BOX)
 	
-	# set box shape extents to match mesh size of 1,1,1
-	PhysicsServer.shape_set_data(box,Vector3(0.5,0.5,0.5))
-	
-	for cube in cube_array:
-		# create collision shape in Physics Server
-		cube.rid = PhysicsServer.body_create(PhysicsServer.BODY_MODE_RIGID, true)
-		cube.mmidx = cnt
-		var transform = Transform()
-
-		PhysicsServer.body_add_shape(cube.rid,box)
-		PhysicsServer.body_set_param(cube.rid,PhysicsServer.BODY_PARAM_MASS, 1.0)
-		PhysicsServer.body_set_param(cube.rid,PhysicsServer.BODY_PARAM_GRAVITY_SCALE, 1.0)
-		PhysicsServer.body_set_space(cube.rid,get_world().space)
-		PhysicsServer.body_set_state(cube.rid,PhysicsServer.BODY_STATE_CAN_SLEEP,true)
-		PhysicsServer.body_set_state(cube.rid,PhysicsServer.BODY_STATE_SLEEPING,true)
-		
+	for i in range(mm.instance_count):
+		var instanced_cube = cube_mm.instance()
 # warning-ignore:integer_division
-		var level = cnt / (side_length * 4)
+		var level = i / (side_length * 4)
 		
 		#reset side a,b,c,d to zero on new level
-		if (cnt % (side_length * 4) == 0):
+		if (i % (side_length * 4) == 0):
 			a = -side_length / 2.0
 			b = 0
 			c = a
 			d = 0
 		
 		# y height should be (level - 0.5), but set to (level + 0.5) to let the bricks fall and collapse better
-		if cnt%4 == 0:
-			transform = transform.translated(Vector3(a+1,level + 0.5,0))
+		if i%4 == 0:
+			instanced_cube.translate(Vector3(a+1,level + 0.5,0))
 			a+=1
-		elif cnt%4 == 1:
-			transform = transform.translated(Vector3(-side_length / 2.0 + side_length + 1.0, level + 0.5, b + 1.0))
+		elif i%4 == 1:
+			instanced_cube.translate(Vector3(-side_length / 2.0 + side_length + 1.0, level + 0.5, b + 1.0))
 			b+=1
-		elif cnt%4 == 2:
-			transform = transform.translated(Vector3(c + 1.0, level + 0.5, side_length + 1.0))
+		elif i%4 == 2:
+			instanced_cube.translate(Vector3(c + 1.0, level + 0.5, side_length + 1.0))
 			c+=1
 		else:
-			transform = transform.translated(Vector3(-side_length / 2.0, level + 0.5, d + 1.0))
+			instanced_cube.translate(Vector3(-side_length / 2.0, level + 0.5, d + 1.0))
 			d+=1
-		mm.set_instance_transform(cube.mmidx,transform)
-		PhysicsServer.body_set_state(cube.rid,PhysicsServer.BODY_STATE_TRANSFORM,transform)
-		cnt+=1
-		
+		get_node("CubeContainer").add_child(instanced_cube)
+		mm.set_instance_transform(i,instanced_cube.transform)
+
 func resetFPS() -> void:
 	fpsLabel.text = "fps: "
 	fps_min = 9999
@@ -141,8 +116,8 @@ func launchMarble() -> void:
 		frames = 1
 
 func deleteCubes() -> void:
-	for cube in cube_array:
-		PhysicsServer.free_rid(cube.rid)
+	for c in cubeContainer.get_children():
+		c.free()
 
 func resetAll() -> void:
 	resetFPS()
@@ -151,7 +126,7 @@ func resetAll() -> void:
 	
 	# delete cubes
 	deleteCubes()
-	num_cubes = int($CanvasLayer/HSlider.value)
+	num_cubes = int($CanvasLayer/ReferenceRect/HSlider.value)
 	_on_HSlider_value_changed(num_cubes)
 	mm.set_instance_count(num_cubes)
 	# reinstance marble
@@ -160,16 +135,17 @@ func resetAll() -> void:
 	add_child(instanced_marble)
 	spawn_cubes()
 
+
 func _on_HSlider_value_changed(value) -> void:
-	$CanvasLayer/NumLabel.text = "cubes: " + str(value) + " (" + str(num_cubes) + ")"
+	$CanvasLayer/ReferenceRect/NumLabel.text = "cubes: " + str(value) + " (" + str(num_cubes) + ")"
 
 func _on_Timer_timeout() -> void:
 	# Performance monitor does not work for Bullet Physics (we use a workaround) - https://github.com/godotengine/godot/issues/16540
 	# sleepLabel.text = "sleeping: " + str(num_cubes - Performance.get_monitor(Performance.PHYSICS_3D_ACTIVE_OBJECTS) + 1)
 	
 	var sleep_count = 0
-	for cube in cube_array:
-		if PhysicsServer.body_get_direct_state(cube.rid).sleeping:
+	for c in cubeContainer.get_children():
+		if c.sleeping:
 			sleep_count = sleep_count + 1
 	sleepLabel.text = "sleeping: " + str(sleep_count)
 
@@ -180,8 +156,3 @@ func _on_CheckBox_toggled(button_pressed) -> void:
 	else:
 		$Timer.stop()
 		sleepLabel.text = "sleeping: (n/a)"
-
-class InnerCube:
-	var rid : RID
-	var mmidx : int
-	

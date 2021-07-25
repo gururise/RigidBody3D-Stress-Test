@@ -28,23 +28,25 @@ func _unhandled_input(event):
 			$InnerGimbal.rotate_object_local(Vector3.RIGHT, dir * y_rotation * mouse_sensitivity)
 
 func get_input_keyboard(delta) -> void:
+	if Input.is_action_pressed("escape"):
+		get_tree().change_scene("res://scenes/launch.tscn")
 	# Rotate outer gimbal around y axis
 	var y_rotation = 0
 	if Input.is_action_pressed("cam_right"):
-		y_rotation += 1
+		y_rotation += -4
 	if Input.is_action_pressed("cam_left"):
-		y_rotation += -1
+		y_rotation += 4
 	rotate_object_local(Vector3.UP, y_rotation * rotation_speed * delta)
 	# Rotate inner gimbal around local x axis
 	var x_rotation = 0
 	if Input.is_action_pressed("cam_up"):
-		x_rotation += -1
+		translate(Vector3.FORWARD * zoom_speed);
 	if Input.is_action_pressed("cam_down"):
-		x_rotation += 1
+		translate(Vector3.BACK * zoom_speed);
 	$InnerGimbal.rotate_object_local(Vector3.RIGHT, x_rotation * rotation_speed * delta)
 
 func _process(_delta):    
-	if !mouse_control:
-		get_input_keyboard(_delta)
+	#if !mouse_control:
+	get_input_keyboard(_delta)
 	$InnerGimbal.rotation.x = clamp($InnerGimbal.rotation.x, -1.4, 0.45)
 	scale = lerp(scale, Vector3.ONE * zoom, zoom_speed)

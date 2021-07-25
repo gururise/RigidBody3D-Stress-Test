@@ -53,52 +53,59 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.106584, -9.53674e-07, -0.000
 mesh = SubResource( 7 )
 material/0 = SubResource( 8 )
 
-[node name="CubeContainer" type="Spatial" parent="."]
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="LaunchButton" type="Button" parent="CanvasLayer"]
-margin_left = 896.0
+[node name="ReferenceRect" type="ReferenceRect" parent="CanvasLayer"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -335.0
+margin_bottom = 170.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LaunchButton" type="Button" parent="CanvasLayer/ReferenceRect"]
+margin_left = 207.0
 margin_top = 84.0
-margin_right = 953.0
+margin_right = 264.0
 margin_bottom = 107.0
 text = "Launch"
 
-[node name="ResetButton" type="Button" parent="CanvasLayer"]
-margin_left = 963.0
+[node name="ResetButton" type="Button" parent="CanvasLayer/ReferenceRect"]
+margin_left = 274.0
 margin_top = 84.0
-margin_right = 1021.0
+margin_right = 332.0
 margin_bottom = 106.0
 text = "Reset"
 
-[node name="FPSLabel" type="Label" parent="CanvasLayer"]
-margin_left = 698.0
+[node name="FPSLabel" type="Label" parent="CanvasLayer/ReferenceRect"]
+margin_left = 9.0
 margin_top = 2.0
-margin_right = 778.0
+margin_right = 89.0
 margin_bottom = 16.0
 custom_colors/font_color = Color( 1, 0, 0, 1 )
 text = "FPS:"
 
-[node name="NumLabel" type="Label" parent="CanvasLayer"]
-margin_left = 895.0
+[node name="NumLabel" type="Label" parent="CanvasLayer/ReferenceRect"]
+margin_left = 206.0
 margin_top = 23.0
-margin_right = 942.0
+margin_right = 253.0
 margin_bottom = 37.0
 custom_colors/font_color = Color( 0.0117647, 0.117647, 0.6, 1 )
 text = "cubes: "
 
-[node name="SleepLabel" type="Label" parent="CanvasLayer"]
-margin_left = 915.0
+[node name="SleepLabel" type="Label" parent="CanvasLayer/ReferenceRect"]
+margin_left = 226.0
 margin_top = 42.0
-margin_right = 973.0
+margin_right = 316.0
 margin_bottom = 56.0
 custom_colors/font_color = Color( 0.0117647, 0.117647, 0.6, 1 )
 text = "sleeping: (n/a)"
 
-[node name="HSlider" type="HSlider" parent="CanvasLayer"]
-margin_left = 897.0
+[node name="HSlider" type="HSlider" parent="CanvasLayer/ReferenceRect"]
+margin_left = 208.0
 margin_top = 60.0
-margin_right = 1021.0
+margin_right = 332.0
 margin_bottom = 76.0
 min_value = 25.0
 max_value = 10000.0
@@ -114,10 +121,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CheckBox" type="CheckBox" parent="CanvasLayer"]
-margin_left = 890.0
+[node name="CheckBox" type="CheckBox" parent="CanvasLayer/ReferenceRect"]
+margin_left = 201.0
 margin_top = 37.0
-margin_right = 914.0
+margin_right = 225.0
 margin_bottom = 61.0
 
 [node name="Timer" type="Timer" parent="."]
@@ -132,8 +139,10 @@ script = ExtResource( 2 )
 transform = Transform( 1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 20, 40 )
 far = 600.0
 
-[connection signal="pressed" from="CanvasLayer/LaunchButton" to="." method="launchMarble"]
-[connection signal="pressed" from="CanvasLayer/ResetButton" to="." method="resetAll"]
-[connection signal="value_changed" from="CanvasLayer/HSlider" to="." method="_on_HSlider_value_changed"]
-[connection signal="toggled" from="CanvasLayer/CheckBox" to="." method="_on_CheckBox_toggled"]
+[node name="CubeContainer" type="Spatial" parent="."]
+
+[connection signal="pressed" from="CanvasLayer/ReferenceRect/LaunchButton" to="." method="launchMarble"]
+[connection signal="pressed" from="CanvasLayer/ReferenceRect/ResetButton" to="." method="resetAll"]
+[connection signal="value_changed" from="CanvasLayer/ReferenceRect/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="toggled" from="CanvasLayer/ReferenceRect/CheckBox" to="." method="_on_CheckBox_toggled"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
