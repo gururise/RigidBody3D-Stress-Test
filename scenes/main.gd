@@ -10,7 +10,7 @@ extends Node3D
 @onready var fpsLabel : Label = $CanvasLayer/FPSLabel
 @onready var sleepLabel : Label = $CanvasLayer/SleepLabel
 @onready var cubeContainer : Node3D = $CubeContainer
-@onready var mm : MultiMesh = $MultiMeshInstance.get_multimesh()
+@onready var mm : MultiMesh = $MultiMeshInstance3D.get_multimesh()
 var instanced_marble
 
 var timer : float = 0.0
@@ -24,7 +24,7 @@ var fps_min : int = 9999
 var fps_max : int = 0
 var fps_sum : int = 0
 var fps_average : float = 0.0
-var frames : int = -20  # need to wait a bit before starting to track the fps
+var sprite_frames : int = -20  # need to wait a bit before starting to track the fps
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -44,10 +44,10 @@ func _unhandled_input(event) -> void:
 func _process(delta) -> void:
 	timer += delta
 	if timer > TIMER_LIMIT:
-		frames += 1
+		sprite_frames += 1
 		timer = 0.0
-		#OS.set_window_title(title + " | fps: " + str(Engine.get_frames_per_second()))
-		if frames > 0:
+		#get_window().set_title(title + " | fps: " + str(Engine.get_frames_per_second()))
+		if sprite_frames > 0:
 			fps = int(Performance.get_monitor(Performance.TIME_FPS))
 			if fps < fps_min:
 				fps_min = fps
@@ -55,11 +55,11 @@ func _process(delta) -> void:
 				fps_max = fps
 			fps_sum += fps
 # warning-ignore:integer_division
-			fps_average = fps_sum / frames
+			fps_average = fps_sum / sprite_frames
 			fpsLabel.text = "fps: " + str(fps) + " // " + "min: " + str(fps_min) + " // " + "max: " + str(fps_max) + " // " + "avg: " + str(fps_average)
 
 func _physics_process(_delta) -> void:
-	# update per-instance multimesh transforms on each physics frame
+	# update per-instance multimesh transforms checked each physics frame
 	for i in range(mm.instance_count):
 		mm.set_instance_transform(i,cubeContainer.get_child(i).transform)
 
@@ -76,7 +76,7 @@ func spawn_cubes() -> void:
 # warning-ignore:integer_division
 		var level = i / (side_length * 4)
 		
-		#reset side a,b,c,d to zero on new level
+		#reset side a,b,c,d to zero checked new level
 		if (i % (side_length * 4) == 0):
 			a = -side_length / 2.0
 			b = 0
@@ -104,7 +104,7 @@ func resetFPS() -> void:
 	fps_max = 0
 	fps_sum = 0
 	fps_average = 0.0
-	frames = -20
+	sprite_frames = -20
 
 func launchMarble() -> void:
 	if not marble_launched:
@@ -113,7 +113,7 @@ func launchMarble() -> void:
 		instanced_marble.apply_central_impulse(Vector3(0,0,-impulse))
 		marble_launched = true
 		fps_sum = 0
-		frames = 1
+		sprite_frames = 1
 
 func deleteCubes() -> void:
 	for c in cubeContainer.get_children():
