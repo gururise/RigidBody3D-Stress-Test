@@ -26,7 +26,7 @@ public class test_cs : Spatial
     private int fps, fps_min = 9999, fps_max = 0, fps_sum = 0, fps_avg = 0, frames = -20;
     private Transform spawnTransform;
     private Random r = new Random();
-    private uint start_msec, end_msec;
+    private ulong start_msec, end_msec;
     List<InnerCube> cubeList = new List<InnerCube>();
 
     public override void _Ready()
@@ -186,7 +186,7 @@ public class test_cs : Spatial
         } else 
         {
             GetNode<Timer>("CubeSpawnTimer").Stop();
-            end_msec = OS.GetTicksMsec();
+            end_msec = Time.GetTicksMsec();
             GD.Print("Elapsed Time: " + (end_msec-start_msec).ToString() + " ms");
             GetNode<RichTextLabel>("CanvasLayer/TimeLabel").BbcodeText = "[center]" + (end_msec - start_msec).ToString() + " ms[/center]";
         }
@@ -197,7 +197,7 @@ public class test_cs : Spatial
         if (button_pressed)
         {
             GetNode<Timer>("CubeSpawnTimer").Start();
-            start_msec = OS.GetTicksMsec();
+            start_msec = Time.GetTicksMsec();
         }
         else
             GetNode<Timer>("CubeSpawnTimer").Stop();
