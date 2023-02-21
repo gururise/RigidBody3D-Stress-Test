@@ -9,13 +9,14 @@ A video using this code can be found on [YouTube](https://www.youtube.com/watch?
 
 # Features
 
+  - Use a PhysicsServer for handling physics simulations, reducing the overhead of having a bunch of nodes on the scene tree.
   - Use MultimeshInstance to optimize rendering of box meshes
   - Configurable number of Rigidbodies
   - GUI controls for reset and launch
   - Additional options available in exported Editor variables
   - Compatible with Godot 3.1.1 or newer
   - Physics update rate set to 50 fps to match default Unity fixed timestep of 0.02
-  - ~~VSYNC disabled to match the Unity test referenced above.~~ VSYNC is now enabled by default, you can disable it in the settings.
+  - VSYNC disabled to match the Unity test referenced above.
   - Report number of sleeping Rigidbodies (enable sleeping checkbox to view sleeping bodies).
 
 ### Performance

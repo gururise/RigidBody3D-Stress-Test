@@ -1,17 +1,13 @@
 extends Spatial
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 export(int,25,75000) var num_cubes : int = 500
 export(int,1,100) var side_length : int = 5
 export(int,1,1000) var impulse : int = 250
 
-#onready var cube : PackedScene = preload("res://scenes/cube.tscn")
 onready var cube_mm : PackedScene = preload("res://scenes/cube_mm.tscn")
 onready var marble : PackedScene = preload("res://scenes/marble.tscn")
-onready var fpsLabel : Label = $CanvasLayer/FPSLabel
-onready var sleepLabel : Label = $CanvasLayer/SleepLabel
+onready var fpsLabel : Label = $CanvasLayer/ReferenceRect/FPSLabel
+onready var sleepLabel : Label = $CanvasLayer/ReferenceRect/SleepLabel
 onready var cubeContainer : Spatial = $CubeContainer
 onready var mm : MultiMesh = $MultiMeshInstance.get_multimesh()
 var instanced_marble
@@ -33,8 +29,8 @@ var frames : int = -20  # need to wait a bit before starting to track the fps
 func _ready() -> void:
 	instanced_marble = marble.instance()
 	add_child(instanced_marble)
-	$CanvasLayer/HSlider.value = num_cubes
-	$CanvasLayer/NumLabel.text = "cubes: " + str(num_cubes) + " (" + str(num_cubes) + ")"
+	$CanvasLayer/ReferenceRect/HSlider.value = num_cubes
+	$CanvasLayer/ReferenceRect/NumLabel.text = "cubes: " + str(num_cubes) + " (" + str(num_cubes) + ")"
 	# setup multimesh instances
 	mm.set_instance_count(num_cubes)
 	spawn_cubes()
@@ -88,7 +84,7 @@ func spawn_cubes() -> void:
 		
 		# y height should be (level - 0.5), but set to (level + 0.5) to let the bricks fall and collapse better
 		if i%4 == 0:
-			instanced_cube.translate(Vector3(a+1,level + 0.5,0))			
+			instanced_cube.translate(Vector3(a+1,level + 0.5,0))
 			a+=1
 		elif i%4 == 1:
 			instanced_cube.translate(Vector3(-side_length / 2.0 + side_length + 1.0, level + 0.5, b + 1.0))
@@ -130,7 +126,7 @@ func resetAll() -> void:
 	
 	# delete cubes
 	deleteCubes()
-	num_cubes = int($CanvasLayer/HSlider.value)
+	num_cubes = int($CanvasLayer/ReferenceRect/HSlider.value)
 	_on_HSlider_value_changed(num_cubes)
 	mm.set_instance_count(num_cubes)
 	# reinstance marble
@@ -141,7 +137,7 @@ func resetAll() -> void:
 
 
 func _on_HSlider_value_changed(value) -> void:
-	$CanvasLayer/NumLabel.text = "cubes: " + str(value) + " (" + str(num_cubes) + ")"
+	$CanvasLayer/ReferenceRect/NumLabel.text = "cubes: " + str(value) + " (" + str(num_cubes) + ")"
 
 func _on_Timer_timeout() -> void:
 	# Performance monitor does not work for Bullet Physics (we use a workaround) - https://github.com/godotengine/godot/issues/16540
